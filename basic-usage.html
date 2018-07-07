@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Basic Usage - The `wasm-bindgen` Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="_FontAwesome/css/font-awesome.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li><a href="basic-usage.html" class="active"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li><a href="what-just-happened.html"><strong aria-hidden="true">2.</strong> What Just Happened?</a></li><li><a href="what-else-can-we-do.html"><strong aria-hidden="true">3.</strong> What Else Can We Do?</a></li><li><a href="closures.html"><strong aria-hidden="true">4.</strong> Closures</a></li><li><a href="feature-reference.html"><strong aria-hidden="true">5.</strong> Feature Reference</a></li><li><a href="cli-reference.html"><strong aria-hidden="true">6.</strong> CLI Reference</a></li><li><a href="reference.html"><strong aria-hidden="true">7.</strong> Type Reference</a></li><li class="spacer"></li><li><a href="contributing.html"><strong aria-hidden="true">9.</strong> Contributing</a></li><li><ol class="section"><li><a href="design.html"><strong aria-hidden="true">9.1.</strong> Internal Design</a></li><li><ol class="section"><li><a href="design/js-objects-in-rust.html"><strong aria-hidden="true">9.1.1.</strong> JS Objects in Rust</a></li><li><a href="design/exporting-rust.html"><strong aria-hidden="true">9.1.2.</strong> Exporting a function to JS</a></li><li><a href="design/exporting-rust-struct.html"><strong aria-hidden="true">9.1.3.</strong> Exporting a struct to JS</a></li><li><a href="design/export-customization.html"><strong aria-hidden="true">9.1.4.</strong> Customizing exports</a></li><li><a href="design/importing-js.html"><strong aria-hidden="true">9.1.5.</strong> Importing a function from JS</a></li><li><a href="design/importing-js-struct.html"><strong aria-hidden="true">9.1.6.</strong> Importing a class from JS</a></li><li><a href="design/import-customization.html"><strong aria-hidden="true">9.1.7.</strong> Customizing imports</a></li><li><a href="design/rust-type-conversions.html"><strong aria-hidden="true">9.1.8.</strong> Rust Type conversions</a></li><li><a href="design/describe.html"><strong aria-hidden="true">9.1.9.</strong> Types in wasm-bindgen</a></li></ol></li><li><a href="team.html"><strong aria-hidden="true">9.2.</strong> Team</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">The `wasm-bindgen` Guide</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="basic-usage.html#basic-usage" id="basic-usage"><h1>Basic Usage</h1></a>
+<p>Let's implement the equivalent of &quot;Hello, world!&quot; for this crate.</p>
+<blockquote>
+<p><strong>Note:</strong> Currently this projects uses <em>nightly Rust</em> which you can acquire
+through <a href="https://rustup.rs">rustup</a> and configure with <code>rustup default nightly</code></p>
+</blockquote>
+<p>If you'd like you dive [straight into an online example][hello-online], but
+if you'd prefer to follow along in your own console let's install the tools we
+need:</p>
+<pre><code class="language-shell">$ rustup target add wasm32-unknown-unknown
+$ cargo +nightly install wasm-bindgen-cli
+</code></pre>
+<p>The first command here installs the wasm target so you can compile to it, and
+the latter will install the <code>wasm-bindgen</code> CLI tool we'll be using later.</p>
+<p>Next up let's make our project</p>
+<pre><code class="language-shell">$ cargo +nightly new js-hello-world --lib
+</code></pre>
+<p>Now let's add a dependency on this project inside <code>Cargo.toml</code> as well as
+configuring our build output:</p>
+<pre><code class="language-toml">[lib]
+crate-type = [&quot;cdylib&quot;]
+
+[dependencies]
+wasm-bindgen = &quot;0.2&quot;
+</code></pre>
+<p>Next up our actual code! We'll write this in <code>src/lib.rs</code>:</p>
+<pre><code class="language-rust ignore">#![feature(proc_macro, wasm_custom_section, wasm_import_module)]
+
+extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+extern {
+    fn alert(s: &amp;str);
+}
+
+#[wasm_bindgen]
+pub fn greet(name: &amp;str) {
+    alert(&amp;format!(&quot;Hello, {}!&quot;, name));
+}
+</code></pre>
+<p>And that's it! If we were to write the <code>greet</code> function naively without the
+<code>#[wasm_bindgen]</code> attribute then JS wouldn't be able to communicate with the
+types like <code>str</code>, so slapping a <code>#[wasm_bindgen]</code> on the function and the import
+of <code>alert</code> ensures that the right shims are generated.</p>
+<p>Next up let's build our project:</p>
+<pre><code class="language-shell">$ cargo +nightly build --target wasm32-unknown-unknown
+</code></pre>
+<p>After this you'll have a wasm file at
+<code>target/wasm32-unknown-unknown/debug/js_hello_world.wasm</code>. Don't be alarmed at
+the size, this is an unoptimized program!</p>
+<p>Now that we've generated the wasm module it's time to run the bindgen tool
+itself! This tool will postprocess the wasm file rustc generated, generating a
+new wasm file and a set of JS bindings as well. Let's invoke it!</p>
+<pre><code class="language-shell">$ wasm-bindgen target/wasm32-unknown-unknown/debug/js_hello_world.wasm \
+  --out-dir .
+</code></pre>
+<p>This is the main point where the magic happens. The <code>js_hello_world.wasm</code> file
+emitted by rustc contains <em>descriptors</em> of how to communicate via richer types
+than wasm currently supports. The <code>wasm-bindgen</code> tool will interpret this
+information, emitting a <strong>replacement module</strong> for the wasm file.</p>
+<p>The previous <code>js_hello_world.wasm</code> file is interpreted as if it were an ES6
+module. The <code>js_hello_world.js</code> file emitted by <code>wasm-bindgen</code> should have the
+intended interface of the wasm file, notably with rich types like strings,
+classes, etc.</p>
+<p>The <code>wasm-bindgen</code> tool also emits a few other files needed to implement this
+module. For example <code>js_hello_world_bg.wasm</code> is the original wasm file but
+postprocessed a bit. It's intended that the <code>js_hello_world_bg.wasm</code> file,
+like before, acts like an ES6 module.</p>
+<p>At this point you'll probably plug these files into a larger build system.
+Files emitted by <code>wasm-bindgen</code> act like normal ES6 modules (one just happens to
+be wasm). As of the time of this writing there's unfortunately not a lot of
+tools that natively do this, but Webpack's 4.0 beta release has native wasm
+support!. Let's take a look at that and see how it works.</p>
+<p>First create an <code>index.js</code> file:</p>
+<pre><code class="language-js">const js = import(&quot;./js_hello_world&quot;);
+
+js.then(js =&gt; {
+  js.greet(&quot;World!&quot;);
+});
+</code></pre>
+<p>Note that we're using <code>import(..)</code> here because Webpack <a href="https://github.com/webpack/webpack/issues/6615">doesn't
+support</a> synchronously importing modules from the main chunk just
+yet.</p>
+<p>Next our JS dependencies by creating a <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;serve&quot;: &quot;webpack-dev-server&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;webpack&quot;: &quot;^4.0.1&quot;,
+    &quot;webpack-cli&quot;: &quot;^2.0.10&quot;,
+    &quot;webpack-dev-server&quot;: &quot;^3.1.0&quot;
+  }
+}
+</code></pre>
+<p>and our webpack configuration</p>
+<pre><code class="language-js">// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: &quot;./index.js&quot;,
+  output: {
+    path: path.resolve(__dirname, &quot;dist&quot;),
+    filename: &quot;index.js&quot;,
+  },
+  mode: &quot;development&quot;
+};
+</code></pre>
+<p>Our corresponding <code>index.html</code>:</p>
+<pre><code class="language-html">&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta content=&quot;text/html;charset=utf-8&quot; http-equiv=&quot;Content-Type&quot;/&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script src='./index.js'&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>And finally:</p>
+<pre><code class="language-shell">$ npm install
+$ npm run serve
+</code></pre>
+<p>If you open https://localhost:8080 in a browser you should see a <code>Hello, world!</code>
+dialog pop up!</p>
+<p>If that was all a bit much, no worries! You can [execute this code
+online][hello-online] thanks to <a href="https://webassembly.studio">WebAssembly Studio</a>
+or you can <a href="https://github.com/rustwasm/wasm-bindgen/tree/master/examples/hello_world">follow along on GitHub</a> to see all the files necessary
+as well as a script to set it all up.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="what-just-happened.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="what-just-happened.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+    </body>
+</html>

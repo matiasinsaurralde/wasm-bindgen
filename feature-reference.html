@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Feature Reference - The `wasm-bindgen` Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="_FontAwesome/css/font-awesome.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li><a href="basic-usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li><a href="what-just-happened.html"><strong aria-hidden="true">2.</strong> What Just Happened?</a></li><li><a href="what-else-can-we-do.html"><strong aria-hidden="true">3.</strong> What Else Can We Do?</a></li><li><a href="closures.html"><strong aria-hidden="true">4.</strong> Closures</a></li><li><a href="feature-reference.html" class="active"><strong aria-hidden="true">5.</strong> Feature Reference</a></li><li><a href="cli-reference.html"><strong aria-hidden="true">6.</strong> CLI Reference</a></li><li><a href="reference.html"><strong aria-hidden="true">7.</strong> Type Reference</a></li><li class="spacer"></li><li><a href="contributing.html"><strong aria-hidden="true">9.</strong> Contributing</a></li><li><ol class="section"><li><a href="design.html"><strong aria-hidden="true">9.1.</strong> Internal Design</a></li><li><ol class="section"><li><a href="design/js-objects-in-rust.html"><strong aria-hidden="true">9.1.1.</strong> JS Objects in Rust</a></li><li><a href="design/exporting-rust.html"><strong aria-hidden="true">9.1.2.</strong> Exporting a function to JS</a></li><li><a href="design/exporting-rust-struct.html"><strong aria-hidden="true">9.1.3.</strong> Exporting a struct to JS</a></li><li><a href="design/export-customization.html"><strong aria-hidden="true">9.1.4.</strong> Customizing exports</a></li><li><a href="design/importing-js.html"><strong aria-hidden="true">9.1.5.</strong> Importing a function from JS</a></li><li><a href="design/importing-js-struct.html"><strong aria-hidden="true">9.1.6.</strong> Importing a class from JS</a></li><li><a href="design/import-customization.html"><strong aria-hidden="true">9.1.7.</strong> Customizing imports</a></li><li><a href="design/rust-type-conversions.html"><strong aria-hidden="true">9.1.8.</strong> Rust Type conversions</a></li><li><a href="design/describe.html"><strong aria-hidden="true">9.1.9.</strong> Types in wasm-bindgen</a></li></ol></li><li><a href="team.html"><strong aria-hidden="true">9.2.</strong> Team</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">The `wasm-bindgen` Guide</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="feature-reference.html#feature-reference" id="feature-reference"><h1>Feature Reference</h1></a>
+<p>Here this section will attempt to be a reference for the various features
+implemented in this project. This is likely not exhaustive but the <a href="https://github.com/rustwasm/wasm-bindgen/tree/master/tests">tests</a>
+should also be a great place to look for examples.</p>
+<p>The <code>#[wasm_bindgen]</code> attribute can be attached to functions, structs,
+impls, and foreign modules. Impls can only contain functions, and the attribute
+cannot be attached to functions in an impl block or functions in a foreign
+module. No lifetime parameters or type parameters are allowed on any of these
+types. Foreign modules must have the <code>&quot;C&quot;</code> abi (or none listed). Free functions
+with <code>#[wasm_bindgen]</code> might not have the <code>&quot;C&quot;</code> abi or none listed, and it's also not
+necessary to annotate with the <code>#[no_mangle]</code> attribute.</p>
+<p>All structs referenced through arguments to functions should be defined in the
+macro itself. Arguments allowed implement the <code>WasmBoundary</code> trait, and examples
+are:</p>
+<ul>
+<li>Integers (u64/i64 require <code>BigInt</code> support)</li>
+<li>Floats</li>
+<li>Borrowed strings (<code>&amp;str</code>)</li>
+<li>Owned strings (<code>String</code>)</li>
+<li>Exported structs (<code>Foo</code>, annotated with <code>#[wasm_bindgen]</code>)</li>
+<li>Exported C-like enums (<code>Foo</code>, annotated with <code>#[wasm_bindgen]</code>)</li>
+<li>Imported types in a foreign module annotated with <code>#[wasm_bindgen]</code></li>
+<li>Borrowed exported structs (<code>&amp;Foo</code> or <code>&amp;mut Bar</code>)</li>
+<li>The <code>JsValue</code> type and <code>&amp;JsValue</code> (not mutable references)</li>
+<li>Vectors and slices of supported integer types and of the <code>JsValue</code> type.</li>
+</ul>
+<p>All of the above can also be returned except borrowed references. Passing
+<code>Vec&lt;JsValue&gt;</code> as an argument to a function is not currently supported. Strings are
+implemented with shim functions to copy data in/out of the Rust heap. That is, a
+string passed to Rust from JS is copied to the Rust heap (using a generated shim
+to malloc some space) and then will be freed appropriately.</p>
+<p>Owned values are implemented through boxes. When you return a <code>Foo</code> it's
+actually turned into <code>Box&lt;RefCell&lt;Foo&gt;&gt;</code> under the hood and returned to JS as a
+pointer. The pointer is to have a defined ABI, and the <code>RefCell</code> is to ensure
+safety with reentrancy and aliasing in JS. In general you shouldn't see
+<code>RefCell</code> panics with normal usage.</p>
+<p>JS-values-in-Rust are implemented through indexes that index a table generated
+as part of the JS bindings. This table is managed via the ownership specified in
+Rust and through the bindings that we're returning. More information about this
+can be found in the [design doc].</p>
+<p>All of these constructs currently create relatively straightforward code on the
+JS side of things, mostly having a 1:1 match in Rust with JS.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="closures.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="cli-reference.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="closures.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="cli-reference.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+    </body>
+</html>

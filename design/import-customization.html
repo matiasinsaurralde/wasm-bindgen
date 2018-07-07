@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Customizing imports - The `wasm-bindgen` Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="_FontAwesome/css/font-awesome.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Introduction</a></li><li class="spacer"></li><li><a href="basic-usage.html"><strong aria-hidden="true">1.</strong> Basic Usage</a></li><li><a href="what-just-happened.html"><strong aria-hidden="true">2.</strong> What Just Happened?</a></li><li><a href="what-else-can-we-do.html"><strong aria-hidden="true">3.</strong> What Else Can We Do?</a></li><li><a href="closures.html"><strong aria-hidden="true">4.</strong> Closures</a></li><li><a href="feature-reference.html"><strong aria-hidden="true">5.</strong> Feature Reference</a></li><li><a href="cli-reference.html"><strong aria-hidden="true">6.</strong> CLI Reference</a></li><li><a href="reference.html"><strong aria-hidden="true">7.</strong> Type Reference</a></li><li class="spacer"></li><li><a href="contributing.html"><strong aria-hidden="true">9.</strong> Contributing</a></li><li><ol class="section"><li><a href="design.html"><strong aria-hidden="true">9.1.</strong> Internal Design</a></li><li><ol class="section"><li><a href="design/js-objects-in-rust.html"><strong aria-hidden="true">9.1.1.</strong> JS Objects in Rust</a></li><li><a href="design/exporting-rust.html"><strong aria-hidden="true">9.1.2.</strong> Exporting a function to JS</a></li><li><a href="design/exporting-rust-struct.html"><strong aria-hidden="true">9.1.3.</strong> Exporting a struct to JS</a></li><li><a href="design/export-customization.html"><strong aria-hidden="true">9.1.4.</strong> Customizing exports</a></li><li><a href="design/importing-js.html"><strong aria-hidden="true">9.1.5.</strong> Importing a function from JS</a></li><li><a href="design/importing-js-struct.html"><strong aria-hidden="true">9.1.6.</strong> Importing a class from JS</a></li><li><a href="design/import-customization.html" class="active"><strong aria-hidden="true">9.1.7.</strong> Customizing imports</a></li><li><a href="design/rust-type-conversions.html"><strong aria-hidden="true">9.1.8.</strong> Rust Type conversions</a></li><li><a href="design/describe.html"><strong aria-hidden="true">9.1.9.</strong> Types in wasm-bindgen</a></li></ol></li><li><a href="team.html"><strong aria-hidden="true">9.2.</strong> Team</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">The `wasm-bindgen` Guide</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="design/import-customization.html#customizing-import-behavior" id="customizing-import-behavior"><h1>Customizing import behavior</h1></a>
+<p>The <code>#[wasm_bindgen]</code> macro supports a good amount of configuration for
+controlling precisely how imports are imported and what they map to in JS. This
+section is intended to hopefully be an exhaustive reference of the
+possibilities!</p>
+<ul>
+<li>
+<p><code>module</code> and <code>version</code> - we've seen <code>module</code> so far indicating where we can
+import items from but <code>version</code> is also allowed:</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen(module = &quot;moment&quot;, version = &quot;^2.0.0&quot;)]
+extern {
+    type Moment;
+    fn moment() -&gt; Moment;
+    #[wasm_bindgen(method)]
+    fn format(this: &amp;Moment) -&gt; String;
+}
+#}</code></pre></pre>
+<p>The <code>module</code> key is used to configure the module that each item is imported
+from. The <code>version</code> key does not affect the generated wasm itself but rather
+it's an informative directive for tools like <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a>. Tools like wasm-pack
+will generate a <code>package.json</code> for you and the <code>version</code> listed here, when
+<code>module</code> is also an NPM package, will correspond to what to write down in
+<code>package.json</code>.</p>
+<p>In other words the usage of <code>module</code> as the name of an NPM package and
+<code>version</code> as the version requirement allows you to, inline in Rust, depend on
+the NPM ecosystem and import functionality from those packages. When bundled
+with a tool like <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a> everything will automatically get wired up with
+bundlers and you should be good to go!</p>
+<p>Note that the <code>version</code> is <em>required</em> if <code>module</code> doesn't start with <code>./</code>. If
+<code>module</code> starts with <code>./</code> then it is an error to provide a version.</p>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>catch</code> - this attribute allows catching a JS exception. This can be attached
+to any imported function and the function must return a <code>Result</code> where the
+<code>Err</code> payload is a <code>JsValue</code>, like so:</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    #[wasm_bindgen(catch)]
+    fn foo() -&gt; Result&lt;(), JsValue&gt;;
+}
+#}</code></pre></pre>
+<p>If the imported function throws an exception then <code>Err</code> will be returned with
+the exception that was raised, and otherwise <code>Ok</code> is returned with the result
+of the function.</p>
+<p>By default <code>wasm-bindgen</code> will take no action when wasm calls a JS function
+which ends up throwing an exception. The wasm spec right now doesn't support
+stack unwinding and as a result Rust code <strong>will not execute destructors</strong>.
+This can unfortunately cause memory leaks in Rust right now, but as soon as
+wasm implements catching exceptions we'll be sure to add support as well!</p>
+</li>
+<li>
+<p><code>constructor</code> - this is used to indicate that the function being bound should
+actually translate to a <code>new</code> constructor in JS. The final argument must be a
+type that's imported from JS, and it's what'll get used in JS:</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(constructor)]
+    fn new() -&gt; Foo;
+}
+#}</code></pre></pre>
+<p>This will attach the <code>new</code> function to the <code>Foo</code> type (implied by
+<code>constructor</code>) and in JS when this function is called it will be equivalent to
+<code>new Foo()</code>.</p>
+</li>
+<li>
+<p><code>method</code> - this is the gateway to adding methods to imported objects or
+otherwise accessing properties on objects via methods and such. This should be
+done for doing the equivalent of expressions like <code>foo.bar()</code> in JS.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(method)]
+    fn work(this: &amp;Foo);
+}
+#}</code></pre></pre>
+<p>The first argument of a <code>method</code> annotation must be a borrowed reference (not
+mutable, shared) to the type that the method is attached to. In this case
+we'll be able to call this method like <code>foo.work()</code> in JS (where <code>foo</code> has
+type <code>Foo</code>).</p>
+<p>In JS this invocation will correspond to accessing <code>Foo.prototype.work</code> and
+then calling that when the import is called. Note that <code>method</code> by default
+implies going through <code>prototype</code> to get a function pointer.</p>
+</li>
+<li>
+<p><code>js_namespace</code> - this attribute indicates that the JS type is accessed through
+a particular namespace. For example the <code>WebAssembly.Module</code> APIs are all
+accessed through the <code>WebAssembly</code> namespace. The <code>js_namespace</code> can be
+applied to any import and whenever the generated JS attempts to reference a
+name (like a class or function name) it'll be accessed through this namespace.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &amp;str);
+}
+#}</code></pre></pre>
+<p>This is an example of how to bind <code>console.log(x)</code> in Rust. The <code>log</code> function
+will be available in the Rust module and will be invoked as <code>console.log</code> in
+JS.</p>
+</li>
+<li>
+<p><code>getter</code> and <code>setter</code> - these two attributes can be combined with <code>method</code> to
+indicate that this is a getter or setter method. A <code>getter</code>-tagged function by
+default accesses the JS property with the same name as the getter function. A
+<code>setter</code>'s function name is currently required to start with &quot;set_&quot; and the
+property it accesses is the suffix after &quot;set_&quot;.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(method, getter)]
+    fn property(this: &amp;Foo) -&gt; u32;
+    #[wasm_bindgen(method, setter)]
+    fn set_property(this: &amp;Foo, val: u32);
+}
+#}</code></pre></pre>
+<p>Here we're importing the <code>Foo</code> type and defining the ability to access each
+object's <code>property</code> property. The first function here is a getter and will be
+available in Rust as <code>foo.property()</code>, and the latter is the setter which is
+accessible as <code>foo.set_property(2)</code>. Note that both functions have a <code>this</code>
+argument as they're tagged with <code>method</code>.</p>
+<p>Finally, you can also pass an argument to the <code>getter</code> and <code>setter</code>
+properties to configure what property is accessed. When the property is
+explicitly specified then there is no restriction on the method name. For
+example the below is equivalent to the above:</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(method, getter = property)]
+    fn assorted_method_name(this: &amp;Foo) -&gt; u32;
+    #[wasm_bindgen(method, setter = &quot;property&quot;)]
+    fn some_other_method_name(this: &amp;Foo, val: u32);
+}
+#}</code></pre></pre>
+<p>Properties in JS are accessed through <code>Object.getOwnPropertyDescriptor</code>. Note
+that this typically only works for class-like-defined properties which aren't
+just attached properties on any old object. For accessing any old property on
+an object we can use...</p>
+</li>
+<li>
+<p><code>structural</code> - this is a flag to <code>method</code> annotations which indicates that the
+method being accessed (or property with getters/setters) should be accessed in
+a structural fashion. For example methods are <em>not</em> accessed through
+<code>prototype</code> and properties are accessed on the object directly rather than
+through <code>Object.getOwnPropertyDescriptor</code>.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(method, structural)]
+    fn bar(this: &amp;Foo);
+    #[wasm_bindgen(method, getter, structural)]
+    fn baz(this: &amp;Foo) -&gt; u32;
+}
+#}</code></pre></pre>
+<p>The type here, <code>Foo</code>, is not required to exist in JS (it's not referenced).
+Instead wasm-bindgen will generate shims that will access the passed in JS
+value's <code>bar</code> property to or the <code>baz</code> property (depending on the function).</p>
+</li>
+<li>
+<p><code>js_name = foo</code> - this can be used to bind to a different function in JS than
+the identifier that's defined in Rust. For example you can also define
+multiple signatures for a polymorphic function in JS as well:</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[wasm_bindgen]
+extern {
+    type Foo;
+    #[wasm_bindgen(js_namespace = console, js_name = log)]
+    fn log_string(s: &amp;str);
+    #[wasm_bindgen(js_namespace = console, js_name = log)]
+    fn log_u32(n: u32);
+    #[wasm_bindgen(js_namespace = console, js_name = log)]
+    fn log_many(a: u32, b: JsValue);
+}
+#}</code></pre></pre>
+<p>All of these functions will call <code>console.log</code> in Rust, but each identifier
+will have only one signature in Rust.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="design/importing-js-struct.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="design/rust-type-conversions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="design/importing-js-struct.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="design/rust-type-conversions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+    </body>
+</html>
